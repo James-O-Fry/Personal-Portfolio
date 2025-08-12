@@ -1,7 +1,8 @@
 .navbar-inverse {
   min-height: 85px; /* taller navbar */
   padding-top: 15px;
-  padding-bottom: 15px;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .navbar-inverse .navbar-brand {
@@ -16,7 +17,7 @@
   font-size: 18px;
 }
 
-/* Optional: remove margin from jumbotron to reduce gap */
 .jumbotron {
   margin-top: 0;
+  padding-top: 30px;
 }
