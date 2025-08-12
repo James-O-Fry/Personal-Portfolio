@@ -1,11 +1,11 @@
 .navbar-inverse {
-  min-height: 70px; /* taller navbar */
+  min-height: 85px; /* taller navbar */
   padding-top: 15px;
   padding-bottom: 15px;
 }
 
 .navbar-inverse .navbar-brand {
-  font-size: 24px;
+  font-size: 28px;
   padding: 0; /* reduce extra padding */
   line-height: 40px;
 }
