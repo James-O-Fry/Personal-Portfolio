@@ -22,3 +22,8 @@
   padding-top: 30px;
   font-weight: bold;
 }
+
+body.dark-mode {
+  background-color: #222222;
+  color: #eeeeee;
+}
