@@ -27,3 +27,7 @@ body.dark-mode {
   background-color: #222222;
   color: #eeeeee;
 }
+
+body {
+    background-color: red !important;
+}
