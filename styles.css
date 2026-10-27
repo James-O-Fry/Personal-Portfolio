@@ -32,3 +32,15 @@ body.dark-mode .jumbotron {
     background-color: #333333;
     color: #eeeeee;
 }
+
+body.dark-mode .thumbnail {
+    background-color: #222222;
+    border-color: #444444;
+    color: #ffffff;
+}
+
+body.dark-mode .thumbnail .caption,
+body.dark-mode .thumbnail h3,
+body.dark-mode .thumbnail p {
+    color: #ffffff;
+}
