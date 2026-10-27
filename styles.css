@@ -32,8 +32,3 @@ body.dark-mode .jumbotron {
     background-color: #333333;
     color: #eeeeee;
 }
-
-row.dark-mode .thumbnail {
-  background-color: #222222;
-  color: #eeeeee;
-}
