@@ -1,10 +1,17 @@
 import random
 
-print("Welcome to my Python project!")
+async def main():
+    print("Welcome to my game!")
 
-name = input("What is your name? ")
+    name = await web_input("What is your name? ")
 
-number = random.randint(1, 100)
+    number = random.randint(1, 10)
 
-print(f"Hello, {name}!")
-print(f"Your random number is {number}")
+    guess = await web_input(
+        "Guess a number between 1 and 10: "
+    )
+
+    if int(guess) == number:
+        print("You win!")
+    else:
+        print(f"The number was {number}.")

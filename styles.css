@@ -44,3 +44,50 @@ body.dark-mode .thumbnail h3,
 body.dark-mode .thumbnail p {
     color: #ffffff;
 }
+
+.game-terminal {
+    background: #171717;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 25px;
+    text-align: left;
+}
+
+#output {
+    background: transparent;
+    color: #70ff9b;
+    border: none;
+    min-height: 250px;
+    max-height: 450px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.input-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.prompt-symbol {
+    color: #70ff9b;
+    font-family: monospace;
+}
+
+#game-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background: #262626;
+    color: white;
+}
+
+#submit-input {
+    padding: 10px 15px;
+}

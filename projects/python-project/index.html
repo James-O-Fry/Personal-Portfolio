@@ -55,66 +55,96 @@
         Loading Python...
     </button>
 
-    <pre id="output"
-         style="margin-top: 25px;
-                padding: 20px;
-                min-height: 200px;
-                background: #171717;
-                color: #70ff9b;
-                text-align: left;
-                white-space: pre-wrap;">
-        Initializing Python...
-    </pre>
+     <input
+            type="text"
+            id="game-input"
+            placeholder="Type your response..."
+            disabled
+            autocomplete="off"
+        >
 
 </div>
 
 <script type="module">
+
 
 import { loadPyodide } from
 "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.mjs";
 
 const output = document.getElementById("output");
 const button = document.getElementById("run");
+const input = document.getElementById("game-input");
+const submitButton = document.getElementById("submit-input");
 
 let pyodide;
+let resolveInput = null;
 
-try {
-    pyodide = await loadPyodide();
+function writeOutput(text) {
+    output.textContent += text + "\n";
+    output.scrollTop = output.scrollHeight;
+}
 
-    pyodide.setStdout({
-        batched: (text) => {
-            output.textContent += text + "\n";
-        }
+function webInput(promptText) {
+    writeOutput(promptText);
+
+    input.disabled = false;
+    submitButton.disabled = false;
+    input.focus();
+
+    return new Promise((resolve) => {
+        resolveInput = resolve;
     });
+}
 
-    pyodide.setStderr({
-        batched: (text) => {
-            output.textContent += text + "\n";
-        }
-    });
+function submitInput() {
+    if (!resolveInput) return;
 
-    pyodide.setStdin({
-        stdin: () => {
-            const answer = prompt("Enter your response:");
+    const value = input.value;
 
-            if (answer === null) {
-                throw new Error("Input cancelled");
-            }
+    writeOutput("> " + value);
 
-            return answer;
-        }
-    });
+    input.value = "";
+    input.disabled = true;
+    submitButton.disabled = true;
 
-    button.disabled = false;
-    button.textContent = "Run Python";
-    output.textContent = "Python is ready!";
+    const resolve = resolveInput;
+    resolveInput = null;
+    resolve(value);
+}
 
-} catch (error) {
-    output.textContent = "Error loading Python: " + error;
+submitButton.addEventListener("click", submitInput);
+
+input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        submitInput();
+    }
+});
+
+async function initializePython() {
+    try {
+        pyodide = await loadPyodide();
+
+        pyodide.setStdout({
+            batched: writeOutput
+        });
+
+        pyodide.setStderr({
+            batched: writeOutput
+        });
+
+        // Make webInput available to Python
+        pyodide.globals.set("web_input", webInput);
+
+        button.disabled = false;
+        button.textContent = "Run Python";
+        output.textContent = "Python is ready!";
+
+    } catch (error) {
+        output.textContent = "Error loading Python: " + error;
+    }
 }
 
 button.addEventListener("click", async () => {
-
     button.disabled = true;
     output.textContent = "";
 
@@ -127,15 +157,22 @@ button.addEventListener("click", async () => {
 
         const pythonCode = await response.text();
 
-        await pyodide.runPythonAsync(pythonCode);
+        await pyodide.runPythonAsync(
+            pythonCode + "\nawait main()"
+        );
 
     } catch (error) {
-        output.textContent += "\nError: " + error;
+        writeOutput("Error: " + error);
 
     } finally {
+        input.disabled = true;
+        submitButton.disabled = true;
+        resolveInput = null;
         button.disabled = false;
     }
 });
+
+initializePython();
 
 </script>
 
