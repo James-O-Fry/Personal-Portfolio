@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Interactive Python Project</title>
+
+    <link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+      href="../../styles.css">
+
+    <script src="../../script.js" defer></script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="../../index.html">Home</a>
+            </li>
+            <li>
+                <a href="../../projects.html">Past Projects</a>
+            </li>
+            <li>
+                <a href="../../resume.html">Current Resume</a>
+            </li>
+            <li>
+                <a href="../../contact.html">Contact</a>
+            </li>
+        </ul>
+
+        <button id="theme-toggle"
+                class="btn navbar-btn navbar-right">
+            Dark Mode
+        </button>
+    </div>
+</nav>
+
+<div class="container text-center">
+
+    <h1>Interactive Python Project</h1>
+
+    <p>Run my Python program directly in your browser!</p>
+
+    <button id="run"
+            class="btn btn-primary btn-lg"
+            disabled>
+        Loading Python...
+    </button>
+
+    <pre id="output"
+         style="margin-top: 25px;
+                padding: 20px;
+                min-height: 200px;
+                background: #171717;
+                color: #70ff9b;
+                text-align: left;
+                white-space: pre-wrap;">
+        Initializing Python...
+    </pre>
+
+</div>
+
+<script type="module">
+
+import { loadPyodide } from
+"https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.mjs";
+
+const output = document.getElementById("output");
+const button = document.getElementById("run");
+
+let pyodide;
+
+try {
+    pyodide = await loadPyodide();
+
+    pyodide.setStdout({
+        batched: (text) => {
+            output.textContent += text + "\n";
+        }
+    });
+
+    pyodide.setStderr({
+        batched: (text) => {
+            output.textContent += text + "\n";
+        }
+    });
+
+    pyodide.setStdin({
+        stdin: () => {
+            const answer = prompt("Enter your response:");
+
+            if (answer === null) {
+                throw new Error("Input cancelled");
+            }
+
+            return answer;
+        }
+    });
+
+    button.disabled = false;
+    button.textContent = "Run Python";
+    output.textContent = "Python is ready!";
+
+} catch (error) {
+    output.textContent = "Error loading Python: " + error;
+}
+
+button.addEventListener("click", async () => {
+
+    button.disabled = true;
+    output.textContent = "";
+
+    try {
+        const response = await fetch("./script.py");
+
+        if (!response.ok) {
+            throw new Error("Unable to load Python script");
+        }
+
+        const pythonCode = await response.text();
+
+        await pyodide.runPythonAsync(pythonCode);
+
+    } catch (error) {
+        output.textContent += "\nError: " + error;
+
+    } finally {
+        button.disabled = false;
+    }
+});
+
+</script>
+
+</body>
+</html>
