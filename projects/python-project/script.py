@@ -5,6 +5,7 @@ async def main():
 
     name = await web_input("What is your name? ")
 
+    print(f"Hi {name}!")
     number = random.randint(1, 10)
 
     guess = await web_input(
