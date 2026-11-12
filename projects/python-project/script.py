@@ -1,7 +1,8 @@
 import random
 
 async def main():
-    print(r"""
+
+print(r"""
 
               N U M B E R   G U E S S I N G   G A M E
 
@@ -25,8 +26,6 @@ async def main():
                         GOOD LUCK!
 
 """)
-
-
 print("Welcome to my game!")
 
 name = await web_input("What is your name? ")
